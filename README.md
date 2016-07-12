@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/VictorAlbertos/Mockery.svg?branch=master)](https://travis-ci.org/VictorAlbertos/Mockery)
+
 # Android and Java library for mocking and testing server responses. 
 
 Mockery is designed for **testing and mocking networking layers**, helping to mock **DTO**s and **auto-generating unit tests** to ensure that the contract between the client application and API is fulfilled. For that, Mockery operates as follows: 
