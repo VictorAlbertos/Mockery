@@ -2,8 +2,6 @@ language: android
 script: "./gradlew build"
 android:
   components:
-    # The BuildTools version used by your project
-    - build-tools-24.0.0
-
-    # The SDK version used to compile your project
-    - android-24
+    - tools # to get the new `repository-11.xml`
+    - tools # to install Android SDK tools 25.1.x (x = 6 right now)
+    ⋮ # rest
