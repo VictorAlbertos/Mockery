@@ -1,6 +1,6 @@
 # Android and Java library for mocking and testing server responses. 
 
-Mockery is designed for **testing and mocking networking layers** helping to mock **DTO**s and **auto-generates unit tests** to ensure that the contract between a client application and an API is fulfilled. For that, Mockery operates as follows: 
+Mockery is designed for **testing and mocking networking layers**, helping to mock **DTO**s and **auto-generating unit tests** to ensure that the contract between the client application and API is fulfilled. For that, Mockery operates as follows: 
 
 * **Mock server responses** using Java `interfaces` and `annotations`. 
 * **Validate server responses** using Java `interfaces`, `annotations` and [JUnit](https://github.com/junit-team/junit4).
@@ -45,7 +45,7 @@ dependencies {
 }
 ```
 
-Once selected the dependency for mocking responses, **add next dependency** using [android-apt plugin](https://bitbucket.org/hvisser/android-apt) **so Mockery can generate the unit tests** which stands up as the contract between your client application and the API:
+Once selected the dependency for mocking responses, **add next dependency** using [android-apt plugin](https://bitbucket.org/hvisser/android-apt) **so Mockery can generate the unit tests** that will stand up as the contract between your client application and the API:
 
 Root *build.gradle* script:
 
@@ -79,7 +79,7 @@ These interceptors act as extensions, they allow Mockery to adjust itself to spe
 
 ### @Bypass interceptor.
 
-Next `interface` shows a puristic usage of *Mockery annotations* without been coupling with any networking library. [@ByPass](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Bypass.java) is an `annotation` which allows Mockery to delegate the responsibility of handling responses to the underlying mockery annotations. 
+The next `interface` shows a puristic usage of *Mockery annotations* without being coupled with any networking libraries. [@ByPass](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Bypass.java) is an `annotation` which allows Mockery to delegate the responsibility of handling responses to the underlying mockery annotations. 
 
 ```java
 @Bypass
@@ -99,7 +99,7 @@ interface RestApi {
 }
 ```
 
-This `interface` has to be decorated with *Mockery annotations* depending on your mocking and validating needs ([more here](#mockery_annotations)). But apart from configuring Mockery's behaviour, these annotations are design to be part of the documentation; as a way to inform about the contract between the client and the API. 
+This `interface` has to be decorated with *Mockery annotations* depending on your mocking and validating needs ([more here](#mockery_annotations)). But apart from configuring Mockery's behaviour, these annotations are designed to be part of the documentation; as a way to inform about the contract between client and API. 
 
 ### @Retrofit Interceptor.
 Next `interface` is decorated with [@Retrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Retrofit.java) `annotation`, which induces Mockery to take care of every aspect related with mocking/validating responses created by Retrofit when using `Call<T>` type. Mockery behaves the same way as an instance of Retrofit does, regarding *threading and http exceptions*. Actually, the `interface` supplied to Retrofit builder should be the same that the one supplied to Mockery (you can [thanks to Jake Wharton](https://github.com/square/retrofit/issues/1828) for this).
@@ -127,8 +127,8 @@ public interface RestApi {
 }
 ```
 
-@Retrofit `annotation` accepts four optional params to **configure the network behaviour**:
-* **delay**: set the network round trip delay in milliseconds
+@Retrofit `annotation` accepts 4 optional params to **configure the network behaviour**:
+* **delay**: set the network's round trip delay in milliseconds
 * **failurePercent**: set the percentage of calls to fail.
 * **variancePercentage**: set the plus-or-minus variancePercentage percentage of the network round trip delay
 * **errorResponseAdapter**: adapt the error message from a failure response to mimic the expected one returned by the server.
@@ -168,8 +168,7 @@ For a complete Retrofit example using `Observable<T>` and `Observable<Response<T
 
 ### Running mockery on production environment or how to mock server responses.
 
-After done with decorating the RestApi `interface`, instantiate it using `Mockery.Builder<T>` to use it as a normal instance.
-
+After being done with decorating the RestApi `interface`, instantiate it using `Mockery.Builder<T>` to use it as a normal instance.
 
 ```java
 if (BuildConfig.DEBUG) {
@@ -183,7 +182,7 @@ if (BuildConfig.DEBUG) {
 
 ### Running mockery on testing environment or how to test server responses.
 
-For every `interface` annotated with *Mockery annotations* a new **java `class` is generated with as much unit tests as needed** to fulfil the requirements expressed by the *Mockery annotations* used to decorated every param method. 
+For every `interface` annotated with *Mockery annotations* a new **java `class` is generated with as much unit tests as needed** to fulfil the requirements expressed by the *Mockery annotations* used to decorate every param method. 
 
 The name of the test generated is the same as the `interface` from which is generated, but appending a *Test_* suffix. So, an interface called *RestApi*, generates a class called *RestApiTest_*. This class is `abstract`, from which you need to extend and implement the only one `abstract` method to provide an instance with the real `interface` implementation.
 
@@ -261,24 +260,24 @@ public final class RestApiTest extends RestApiTest_ {
 }
 ```
 
-The generated code hides its internals details using some sort of [Robot pattern](https://realm.io/news/kau-jake-wharton-testing-robots/), which provides a cleaner lecture for the generated code. Plus, the order in which the tests are executed is based on the position at which the methods were declared in the original `interface`.
+The generated code hides its internal details using some sort of [Robot pattern](https://realm.io/news/kau-jake-wharton-testing-robots/), which provides a cleaner legibility of the generated code. Plus, the order in which the tests are executed is based on the position at which the methods were declared in the original `interface`.
 
 
 ## <a name="mockery_annotations"></a> Mockery annotations. 
 
 To configure Mockery for mocking and validating server responses, you need to decorate the `interface` with *Mockery annotations*. Either using the [built-in ones](#built_in_mockery_annotations) or creating a [custom one](#custom_annotations). 
 
-Every *Mockery annotations* has two functions: **supply mock objects and validate that some data meets certain criteria**. And these functions are expressed in two dimensions: the **production code**, where **Mockery mimics the server behaviour** validating the parameter values received and serving a response; and the **test code**, where **Mockery tests the server behaviour** sending the parameter values and validating its responses. 
+Every *Mockery annotation* has two functions: **supply mock objects and validate that some data meets certain criteria**. And these functions are expressed in two dimensions: the **production code**, where **Mockery mimics the server behaviour** validating the parameter values received and serving a response; and the **test code**, where **Mockery tests the server behaviour** sending the parameter values and validating its responses.
 
-To whom Mockery servers the data or from whom validates it, it's undefined until you choose where to place the annotation (that's why some annotations are restricted for methods, params or both of them). **The key to understand how Mockery works involves understanding to whom Mockery serves and validates data depending on the place `annotation` (method vs param) and the current environment (production code vs test code)**. 
+To whom Mockery serves the data or from whom does Mockery validate it, is undefined until you choose where to place the annotation (that's why some annotations are restricted for methods, params or both of them). **The key to understanding how Mockery works involves knowing to whom Mockery serves and validates data depending on the placement of the `annotation` (method vs param) and the current environment (production code vs test code)**. 
 
-1. **On a param during production code**, the `annotation` acts as a validator for the parameter value sent to the server, performing the same validations that a server would do to preserve the API requirements. 
+1. **On a param during production code**, the `annotation` acts as a validator for the parameter value sent to the server, performing the same validations that the server would do to preserve the API requirements. 
 
 2. **On a param during test code**, the `annotation` supplies a legal and an illegal value to test the response of the server. 
 
 3. **On a method during production code**, the `annotation` mocks the response of the server, serving the same kind of data that the server would do to fulfil the API requirements. 
 
-4. **On a method during test code**, the `annotation` validates the server response asserting for success and failure scenarios, depending on if the parameter value sent were a legal or an illegal one.
+4. **On a method during test code**, the `annotation` validates the server response asserting for success and failure scenarios, depending on the validity of the parameter which was sent.
 
 To sum up, Mockery is a close system of mocking and validating that mimics and tests the specs of your networking layer.
 
@@ -389,11 +388,11 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
 #### <a name="@valid"></a> @Valid
 * **Target**: `method` and `param`.
 * **Arguments**: 
-  * *value*: an `String` containing a regular expression. Either use one of the available regular expressions listed in [Valid.Template](source) or supply a custom one. 
-  * *legal* (optional): an `String` which sets the value to send to the server when running the associated unit test asserting for a success response. If not set, a random value that matches with the supplied regular expression is used. 
-  * *illegal* (optional): an `String` which sets the value to send to the server when running the associated unit test asserting for a failure response. If not set, an empty string or a 0 value is used, depending on the associated `type` param.
+  * *value*: a `String` containing a regular expression. Either use one of the available regular expressions listed in [Valid.Template](source) or supply a custom one. 
+  * *legal* (optional): a `String` which sets the value to send to the server when running the associated unit test asserting for a success response. If not set, a random value that matches the supplied regular expression is used. 
+  * *illegal* (optional): a `String` which sets the value to send to the server when running the associated unit test asserting for a failure response. If not set, an empty string or a 0 value is used, depending on the associated `type` param.
 * **Supported types**: `String`, `Character`, `double`, `Double`, `float`, `Float`, `int`, `Integer`, `long`, `Long`.
-* **When to use**: to mock or validate values which match certain regular expressions, like email, phone, id and so on. 
+* **When to use**: to mock or validate values that match certain regular expressions, like email, phone, id and so on. 
 * **How to use**: decorate the method/param with `@Valid` supplying the regular expression.
 * **Usage example**:
 
@@ -422,7 +421,7 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
 ```
 
 ### Retrofit mockery annotations:
-Following *Mockery annotations* are only supported for those interfaces which has been annotated with `@Retrofit` or `@RxRetrofit` interceptor. They hide the complexity of mocking and validating common Retrofit types. 
+The following *Mockery annotations* are only supported for those interfaces which have been annotated with `@Retrofit` or `@RxRetrofit` interceptor. They hide the complexity of mocking and validating common Retrofit types.
 
 #### @RequestBodyDTO 
 * **Target**: `param`.
@@ -522,10 +521,9 @@ But before creating any custom `annotation`, think about opening an issue to war
 
 ### Interceptor annotation to add support for new networking libraries. 
 
-The process of creating a **custom Interceptor** is very similar to the process of creating a new [Mockery annotation](#mockery_annotation). You have to create the desired `annotation` and decorated it with [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) `annotation`, which demands as argument a class which implements [Interceptor.Behaviour](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) to define how the annotation should behave. 
+The process of creating a **custom Interceptor** is very similar to the process of creating a new [Mockery annotation](#mockery_annotation). You have to create the desired `annotation` and decorate it with [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) `annotation`, which demands as argument a class which implements [Interceptor.Behaviour](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) to define how the annotation should behave.
 
-But the process to support a new networking library should be done both carefully and properly tested. For that reason, in case you were willing to add support for a new networking library; please open an issue requesting support and we will try to integrate it as a new built-in extension for Mockery. That way the library would grow in new features to natively support other people demands. 
-
+But the process to support a new networking library should be done both carefully and with proper testing. For that reason, in case you were willing to add support for a new networking library; please open an issue requesting support and we will try to integrate it as a new built-in extension for Mockery. That way the library will grow in new features to natively support other people's demands.  
 
 ## Author
 **Víctor Albertos**
