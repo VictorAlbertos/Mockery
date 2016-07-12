@@ -70,7 +70,7 @@ dependencies {
 
 ## Usage
 
-Create an `interface` with as much methods as needed to gather the API endpoints. This `interface` needs to be annotated with one of the following `@Interceptor` annotations:
+Create an `interface` with as much methods as needed to gather the API endpoints. This `interface` needs to be annotated with one of the following [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) annotations:
 * @Bypass
 * @Retrofit
 * @RxRetrofit
@@ -79,7 +79,7 @@ These interceptors act as extensions, they allow Mockery to adjust itself to spe
 
 ### @Bypass interceptor.
 
-Next `interface` shows a puristic usage of *Mockery annotations* without been coupling with any networking library. [@ByPass](source_link) is an `annotation` which allows Mockery to delegate the responsibility of handling responses to the underlying mockery annotations. 
+Next `interface` shows a puristic usage of *Mockery annotations* without been coupling with any networking library. [@ByPass](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Bypass.java) is an `annotation` which allows Mockery to delegate the responsibility of handling responses to the underlying mockery annotations. 
 
 ```java
 @Bypass
@@ -99,10 +99,10 @@ interface RestApi {
 }
 ```
 
-This `interface` has to be decorated with *Mockery annotations* depending on your mocking and validating needs ([more here](section_link)). But apart from configuring Mockery's behaviour, these annotations are design to be part of the documentation; as a way to inform about the contract between the client and the API. 
+This `interface` has to be decorated with *Mockery annotations* depending on your mocking and validating needs ([more here](#mockery_annotations)). But apart from configuring Mockery's behaviour, these annotations are design to be part of the documentation; as a way to inform about the contract between the client and the API. 
 
 ### @Retrofit Interceptor.
-Next `interface` is decorated with [@Retrofit](source_link) `annotation`, which induces Mockery to take care of every aspect related with mocking/validating responses created by Retrofit when using `Call<T>` type. Mockery behaves the same way as an instance of Retrofit does, regarding *threading and http exceptions*. Actually, the `interface` supplied to Retrofit builder should be the same that the one supplied to Mockery (you can [thanks to Jake Wharton](https://github.com/square/retrofit/issues/1828) for this).
+Next `interface` is decorated with [@Retrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Retrofit.java) `annotation`, which induces Mockery to take care of every aspect related with mocking/validating responses created by Retrofit when using `Call<T>` type. Mockery behaves the same way as an instance of Retrofit does, regarding *threading and http exceptions*. Actually, the `interface` supplied to Retrofit builder should be the same that the one supplied to Mockery (you can [thanks to Jake Wharton](https://github.com/square/retrofit/issues/1828) for this).
 
 ```java
 @Retrofit(delay = 2500, failurePercent = 15)
@@ -133,11 +133,11 @@ public interface RestApi {
 * **variancePercentage**: set the plus-or-minus variancePercentage percentage of the network round trip delay
 * **errorResponseAdapter**: adapt the error message from a failure response to mimic the expected one returned by the server.
 
-For a complete Retrofit example using `Call<T>`, there is an [android module](source_link) dedicated to it.
+For a complete Retrofit example using `Call<T>`, there is an [android module](https://github.com/VictorAlbertos/Mockery/tree/master/example_retrofit) dedicated to it.
 
 
 ### @RxRetrofit Interceptor.
-Next `interface` is decorated with [@RxRetrofit](source_link) annotation, which inducts Mockery to behave in a similar way that it does when it is annotated with @Retrofit `annotation`, but with the difference that the response type is encapsulated in an `Observable<T>` or `Observable<Response<T>>`. 
+Next `interface` is decorated with [@RxRetrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_rx_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/RxRetrofit.java) `annotation`, which inducts Mockery to behave in a similar way that it does when it is annotated with @Retrofit `annotation`, but with the difference that the response type is encapsulated in an `Observable<T>` or `Observable<Response<T>>`. 
 
 
 ```java
@@ -162,10 +162,9 @@ public interface RestApi {
 }
 ```
 
-As @Retrofit annotation, @Rxretrofit accepts the same values to** configure the behaviour of the server responses**. 
+As @Retrofit annotation, @Rxretrofit accepts the same values to **configure the behaviour of the server responses**. 
 
-For a complete Retrofit example using `Observable<T>` and `Observable<Response<T>>`, there is another [android module](source_link) dedicated to it.
-
+For a complete Retrofit example using `Observable<T>` and `Observable<Response<T>>`, there is another [android module](https://github.com/VictorAlbertos/Mockery/tree/master/example_rx_retrofit) dedicated to it.
 
 ### Running mockery on production environment or how to mock server responses.
 
@@ -265,7 +264,7 @@ public final class RestApiTest extends RestApiTest_ {
 The generated code hides its internals details using some sort of [Robot pattern](https://realm.io/news/kau-jake-wharton-testing-robots/), which provides a cleaner lecture for the generated code. Plus, the order in which the tests are executed is based on the position at which the methods were declared in the original `interface`.
 
 
-## Mockery annotations. 
+## <a name="mockery_annotations"></a> Mockery annotations. 
 
 To configure Mockery for mocking and validating server responses, you need to decorate the `interface` with *Mockery annotations*. Either using the [built-in ones](#built_in_mockery_annotations) or creating a [custom one](#custom_annotations). 
 
@@ -290,7 +289,7 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
 
 #### @DTO
 * **Target**: `method` and `param`.
-* **Arguments**: a `Class` which implements [DTO.Behaviour](source) `interface`.
+* **Arguments**: a `Class` which implements [DTO.Behaviour](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_mockery/DTO.java) `interface`.
 * **Supported types**: the specified generic `type` of `DTO.Behaviour<T>` `interface`, including parameterized types like `List<T>`, `Map<K,V>`, and so on.
 * **When to use**: to mock or validate a custom DTO. 
 * **How to use**: decorate the method/param with `@DTO` supplying a `DTO.Behaviour<T>` implementation.
@@ -315,7 +314,7 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
 
 #### @DTOArgs
 * **Target**: `method`.
-* **Arguments**: a `Class` which implements [DTOArgs.Behaviour](source) `interface`.
+* **Arguments**: a `Class` which implements [DTOArgs.Behaviour](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_mockery/DTOArgs.java) `interface`.
 * **Supported types**: the specified generic type of `DTOArgs.Behaviour<T>` `interface`, including parameterized types like `List<T>`, `Map<K,V>`, and so on.
 * **When to use**: to mock or validate a custom DTO and it is required to access the array of objects representing the values supplied in the method call invocation. 
 * **How to use**: decorate the method with `@DTOArgs` supplying a `DTOArgs.Behaviour<T>` implementation.
@@ -344,7 +343,7 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
 * **Arguments**: a `Class` which implements `DTO.Behaviour<T>` interface.
 * **Supported types**: `String`.
 * **When to use**: to mock or validate a custom DTO that is serialized as a json `String` representation. 
-* **How to use**: @DTOJson serialize-deserialize the associated object from-to json, and because of that, it requires that the interface using it is annotated with [JsonConverter](source), which accepts a [JolyglotGeneric](https://github.com/VictorAlbertos/Jolyglot) instance. To use it, decorate the param with `@DTOJson`, supplying a `DTO.Behaviour<T>` implementation.
+* **How to use**: @DTOJson serialize-deserialize the associated object from-to json, and because of that, it requires that the interface using it is annotated with [JsonConverter](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/JsonConverter.java), which accepts a [JolyglotGeneric](https://github.com/VictorAlbertos/Jolyglot) instance. To use it, decorate the param with `@DTOJson`, supplying a `DTO.Behaviour<T>` implementation.
 * **Usage example**:
 
 ```java
@@ -470,7 +469,7 @@ Following *Mockery annotations* are only supported for those interfaces which ha
 Mockery offers a very extensible API to provide custom mocking/validation specs as such as support for other networking libraries. 
 
 ### <a name="mockery_annotation"></a> Mockery annotations for creating new mockery and validations specs.
-First create the desired `annotation`. This `annotation` has to be annotated with [@Mockery](source) annotation, which tells to Mockery that this annotation has to be processed as a new component of the library. 
+First create the desired `annotation`. This `annotation` has to be annotated with [@Mockery](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Mockery.java) `annotation`, which tells to Mockery that this `annotation` has to be processed as a new component of the library. 
 
 ```java
 @Retention(RUNTIME)
@@ -518,12 +517,12 @@ Once you have created the `annotation` and implemented its behaviour with `Mocke
   ...(@Custom String email);
 ```
 
-But before creating any custom annotation, think about opening an issue to warning about this missing functionality in order to check if Mockery should support this feature as a built-in annotation.   
+But before creating any custom `annotation`, think about opening an issue to warning about this missing functionality in order to check if Mockery should support this feature as a built-in annotation.   
 
 
 ### Interceptor annotation to add support for new networking libraries. 
 
-The process of creating a **custom Interceptor** is very similar to the process of creating a new [Mockery annotation](#mockery_annotation). You have to create the desired `annotation` and decorated it with [@Interceptor](source_link) `annotation`, which demands as argument a class which implements [Interceptor.Behaviour](source_link) to define how the annotation should behave. 
+The process of creating a **custom Interceptor** is very similar to the process of creating a new [Mockery annotation](#mockery_annotation). You have to create the desired `annotation` and decorated it with [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) `annotation`, which demands as argument a class which implements [Interceptor.Behaviour](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) to define how the annotation should behave. 
 
 But the process to support a new networking library should be done both carefully and properly tested. For that reason, in case you were willing to add support for a new networking library; please open an issue requesting support and we will try to integrate it as a new built-in extension for Mockery. That way the library would grow in new features to natively support other people demands. 
 
