@@ -39,12 +39,12 @@ public @interface RequestBodyValid {
   String value();
 
   /**
-   * Same as {@link Valid#legal()
+   * Same as {@link Valid#legal()}
    */
   String legal() default "";
 
   /**
-   * Same as {@link Valid#illegal()
+   * Same as {@link Valid#illegal()}
    */
   String illegal() default "";
 }
