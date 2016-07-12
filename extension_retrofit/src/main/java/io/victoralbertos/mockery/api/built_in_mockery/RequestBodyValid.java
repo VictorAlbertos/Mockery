@@ -34,17 +34,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 public @interface RequestBodyValid {
   /**
-   * @see Valid#value().
+   * Same as {@link Valid#value()}
    */
   String value();
 
   /**
-   * @see Valid#legal().
+   * Same as {@link Valid#legal()
    */
   String legal() default "";
 
   /**
-   * @see Valid#illegal().
+   * Same as {@link Valid#illegal()
    */
   String illegal() default "";
 }
