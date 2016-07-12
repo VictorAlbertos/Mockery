@@ -43,6 +43,9 @@ android {
       setIgnoreFailures(true)
     }
   }
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
