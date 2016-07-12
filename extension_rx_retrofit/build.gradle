@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+group='com.github.VictorAlbertos'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
+dependencies {
+  compile project(':extension_retrofit')
+
+  compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+  testCompile 'junit:junit:4.12'
+  testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.2'
+}

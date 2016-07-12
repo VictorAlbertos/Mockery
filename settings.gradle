@@ -1,0 +1,5 @@
+include ':core', ':extension_rx_retrofit', ':test_compiler', ':extension_retrofit', ':example_rx_retrofit',
+        ':test_runtime',
+        ':example_retrofit'
+
+

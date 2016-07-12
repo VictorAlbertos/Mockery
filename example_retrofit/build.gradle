@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+buildscript {
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencies {
+    classpath "com.neenbedankt.gradle.plugins:android-apt:1.8"
+  }
+}
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion "24.0.0"
+
+  defaultConfig {
+    applicationId "io.victoralbertos.example_retrofit"
+    minSdkVersion 16
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+  }
+  signingConfigs {
+    release {
+      storeFile file("../keystore.jks")
+      storePassword "123456"
+      keyAlias "123456"
+      keyPassword "123456"
+    }
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
+    }
+  }
+  testOptions {
+    unitTests.all {
+      setIgnoreFailures(true)
+    }
+  }
+}
+
+dependencies {
+  compile 'com.android.support:appcompat-v7:24.0.0'
+  compile 'com.android.support:recyclerview-v7:24.+'
+  compile 'com.github.FuckBoilerplate:OkAdapters:0.1.2'
+
+  compile 'com.squareup.retrofit2:retrofit:2.0.1'
+
+  compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+  compile 'io.reactivex:rxandroid:1.2.1'
+
+  compile 'org.hamcrest:hamcrest-library:1.3'
+  compile project(':extension_retrofit')
+
+  apt project(':test_compiler')
+  provided project(':test_runtime')
+  provided 'org.glassfish:javax.annotation:10.0-b28'
+  provided 'junit:junit:4.12'
+}
