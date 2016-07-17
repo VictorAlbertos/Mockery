@@ -2,13 +2,20 @@
 <a href="http://www.methodscount.com/?lib=com.github.VictorAlbertos.Mockery%3Acore%3A0.0.3"><img src="https://img.shields.io/badge/Methods count-core: 194 | deps: 727-e91e63.svg"/></a>
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Mockery-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3910)
 
-# Android and Java library for mocking and testing server responses. 
+# Android and Java library for mocking and testing Retrofit interfaces. 
+
+Tired of writing over and over the same unit tests for testing [Retrofit](https://github.com/square/retrofit) interfaces? Exhausted of asserting for success and failure response depending on the request? Irritated of implementing manually every Retrofit interface to mock server's behaviour? One step away from kill yourself just to get some sort of freedom?
+
+Probably not, because you don't give a shit about all this. You don't test your network layer, neither you don't mock it, and of course you never listen to your mother. And that's good. That's fair enought. You should not do anything that could kill your delicate and delightful spirit. 
+
+You should write a library and that library should do it for you. A library should exists and this library should generate unit tests and mock server responses based on simple rules. That was the thought, and the thought became nothing just like most good ideas.
+
+But I wrote that library -for you, for me, for all that children that cry at harsh nights when not unit tests come. That library is this library, and it is called Mockery and it generates all that crappy boring tests for you, and it mocks the server behaviour  too. You just need to decorate the old good Retrofit interfaces with a bunch of annotations. It's not so hard. 
 
 Mockery is designed for **testing and mocking networking layers**, helping to mock **DTO**s and **auto-generating unit tests** to ensure that the contract between the client application and API is fulfilled. For that, Mockery operates as follows: 
 
 * **Mock server responses** using Java `interfaces` and `annotations`. 
 * **Validate server responses** using Java `interfaces`, `annotations` and [JUnit](https://github.com/junit-team/junit4).
-* **Fully extensible API** to support any variety of networking libraries, mockery or validation specs; with **built-in support for** common validations and popular networking libraries such as **[Retrofit](https://github.com/square/retrofit)**. 
 
 
 ## Setup
@@ -24,14 +31,6 @@ allprojects {
 }
 ```
 Depending on your needs, **add one of the next dependencies** in the *build.gradle* script of your target module:
-
-Mockery without support for any specific network library: 
-
-```gradle
-dependencies 
-    compile 'com.github.VictorAlbertos.Mockery:core:0.0.3'
-}
-```
 
 Mockery supporting Retrofit with responses of type `Call<T>`:
 
@@ -75,35 +74,8 @@ dependencies {
 ## Usage
 
 Create an `interface` with as much methods as needed to gather the API endpoints. This `interface` needs to be annotated with one of the following [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) annotations:
-* @Bypass
 * @Retrofit
 * @RxRetrofit
-
-These interceptors act as extensions, they allow Mockery to adjust itself to specific networking libraries without coupling with any of them. 
-
-### @Bypass interceptor.
-
-The next `interface` shows a puristic usage of *Mockery annotations* without being coupled with any networking libraries. [@ByPass](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Bypass.java) is an `annotation` which allows Mockery to delegate the responsibility of handling responses to the underlying mockery annotations. 
-
-```java
-@Bypass
-interface RestApi {
-  @DTOArgs(UserDTO.class)
-  User getUserByName(@Valid(STRING) String username);
-
-  @DTOArgs(UsersDTO.class)
-  List<User> getUsers(@Optional int lastIdQueried,
-      @Optional int perPage);
-
-  @DTO(ReposDTO.class)
-  List<Repo> getRepos(
-      @Valid(STRING)  String username,
-      @Enum({"all", "owner", "member"}) String type,
-      @Enum({"asc", "desc"})String direction);
-}
-```
-
-This `interface` has to be decorated with *Mockery annotations* depending on your mocking and validating needs ([more here](#mockery_annotations)). But apart from configuring Mockery's behaviour, these annotations are designed to be part of the documentation; as a way to inform about the contract between client and API. 
 
 ### @Retrofit Interceptor.
 Next `interface` is decorated with [@Retrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Retrofit.java) `annotation`, which induces Mockery to take care of every aspect related with mocking/validating responses created by Retrofit when using `Call<T>` type. Mockery behaves the same way as an instance of Retrofit does, regarding *threading and http exceptions*. Actually, the `interface` supplied to Retrofit builder should be the same that the one supplied to Mockery (you can [thanks to Jake Wharton](https://github.com/square/retrofit/issues/1828) for this).
@@ -137,8 +109,9 @@ public interface RestApi {
 * **variancePercentage**: set the plus-or-minus variancePercentage percentage of the network round trip delay
 * **errorResponseAdapter**: adapt the error message from a failure response to mimic the expected one returned by the server.
 
-For a complete Retrofit example using `Call<T>`, there is an [android module](https://github.com/VictorAlbertos/Mockery/tree/master/example_retrofit) dedicated to it.
+As long as the @Retrofit `annotation`, the previous interface has been decorated with *Mockery annotations* to define the way Mokcery mocks and tests the endpoint ([more here](#mockery_annotations)). 
 
+For a complete Retrofit example using `Call<T>`, there is an [android module](https://github.com/VictorAlbertos/Mockery/tree/master/example_retrofit) dedicated to it.
 
 ### @RxRetrofit Interceptor.
 Next `interface` is decorated with [@RxRetrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_rx_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/RxRetrofit.java) `annotation`, which inducts Mockery to behave in a similar way that it does when it is annotated with @Retrofit `annotation`, but with the difference that the response type is encapsulated in an `Observable<T>` or `Observable<Response<T>>`. 
@@ -172,7 +145,7 @@ For a complete Retrofit example using `Observable<T>` and `Observable<Response<T
 
 ### Running mockery on production environment or how to mock server responses.
 
-After being done with decorating the RestApi `interface`, instantiate it using `Mockery.Builder<T>` to use it as a normal instance.
+After being done with decorating the RestApi `interface`, instantiate it using `Mockery.Builder<T>`:
 
 ```java
 if (BuildConfig.DEBUG) {
@@ -186,7 +159,7 @@ if (BuildConfig.DEBUG) {
 
 ### Running mockery on testing environment or how to test server responses.
 
-For every `interface` annotated with *Mockery annotations* a new **java `class` is generated with as much unit tests as needed** to fulfil the requirements expressed by the *Mockery annotations* used to decorate every param method. 
+For every `interface` annotated with *Mockery annotations* a new **java `class` is generated with as much unit tests as needed** to fulfil the requirements expressed by the *Mockery annotations*. 
 
 The name of the test generated is the same as the `interface` from which is generated, but appending a *Test_* suffix. So, an interface called *RestApi*, generates a class called *RestApiTest_*. This class is `abstract`, from which you need to extend and implement the only one `abstract` method to provide an instance with the real `interface` implementation.
 
@@ -272,18 +245,6 @@ The generated code hides its internal details using some sort of [Robot pattern]
 To configure Mockery for mocking and validating server responses, you need to decorate the `interface` with *Mockery annotations*. Either using the [built-in ones](#built_in_mockery_annotations) or creating a [custom one](#custom_annotations). 
 
 Every *Mockery annotation* has two functions: **supply mock objects and validate that some data meets certain criteria**. And these functions are expressed in two dimensions: the **production code**, where **Mockery mimics the server behaviour** validating the parameter values received and serving a response; and the **test code**, where **Mockery tests the server behaviour** sending the parameter values and validating its responses.
-
-To whom Mockery serves the data or from whom does Mockery validate it, is undefined until you choose where to place the annotation (that's why some annotations are restricted for methods, params or both of them). **The key to understanding how Mockery works involves knowing to whom Mockery serves and validates data depending on the placement of the `annotation` (method vs param) and the current environment (production code vs test code)**. 
-
-1. **On a param during production code**, the `annotation` acts as a validator for the parameter value sent to the server, performing the same validations that the server would do to preserve the API requirements. 
-
-2. **On a param during test code**, the `annotation` supplies a legal and an illegal value to test the response of the server. 
-
-3. **On a method during production code**, the `annotation` mocks the response of the server, serving the same kind of data that the server would do to fulfil the API requirements. 
-
-4. **On a method during test code**, the `annotation` validates the server response asserting for success and failure scenarios, depending on the validity of the parameter which was sent.
-
-To sum up, Mockery is a close system of mocking and validating that mimics and tests the specs of your networking layer.
 
 ## <a name="built_in_mockery_annotations"></a> Built-in Mockery annotations. 
 
@@ -541,3 +502,4 @@ Another author's libraries:
 * [RxCache](https://github.com/VictorAlbertos/RxCache): Reactive caching library for Android and Java.
 * [RxActivityResult](https://github.com/VictorAlbertos/RxActivityResult): A reactive-tiny-badass-vindictive library to break with the OnActivityResult implementation as it breaks the observables chain. 
 * [RxSocialConnect](https://github.com/VictorAlbertos/RxSocialConnect-Android): OAuth RxJava extension for Android.
+
