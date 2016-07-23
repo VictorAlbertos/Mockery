@@ -385,9 +385,6 @@ Following *Mockery annotations* are accessible as built-in parts of Mockery's co
   ...(@Optional String email, @Optional Model model);
 ```
 
-### Retrofit mockery annotations:
-The following *Mockery annotations* are only supported for those interfaces which have been annotated with `@Retrofit` or `@RxRetrofit` interceptor. They hide the complexity of mocking and validating common Retrofit types.
-
 #### @RequestBodyDTO 
 * **Target**: `param`.
 * **Arguments**: a `Class` which implements `DTO.Behaviour<T>` interface.
