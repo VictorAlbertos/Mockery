@@ -6,7 +6,7 @@
 
 Tired of writing over and over the same unit tests for testing [Retrofit](https://github.com/square/retrofit) interfaces? Exhausted of asserting for success and failure response depending on the request? Irritated of implementing manually every Retrofit interface to mock server's behaviour? One step away from kill yourself just to get some sort of freedom?
 
-Probably not, because you don't give a shit about all this. You don't test your network layer, neither you don't mock it, and of course you never listen to your mother. And that's good. That's fair enought. You should not do anything that could kill your delicate and delightful spirit. 
+Probably not, because you don't give a shit about all this. You don't test your network layer, neither you don't mock it, and of course you never listen to your mother. And that's good. That's fair enough. You should not do anything that could kill your delicate and delightful spirit. 
 
 You should write a library and that library should do it for you. A library should exists and this library should generate unit tests and mock server responses based on simple rules. That was the thought, and the thought became nothing just like most good ideas.
 
