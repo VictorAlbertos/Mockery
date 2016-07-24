@@ -147,8 +147,7 @@ public final class RestApiTest {
     subscriber.assertError(HttpException.class);
 
     Throwable error = subscriber.getOnErrorEvents().get(0);
-    assertThat(error.getMessage(), is("HTTP 404 model.s1 must be equal "
-        + "to io.victoralbertos.mockery.internal.integration.Model"));
+    assertThat(error.getMessage(), is("HTTP 404 null"));
   }
 
   @Test public void modelWithParamsResponseFailsWhenInvalidRequestBody() throws IOException {
@@ -216,7 +215,7 @@ public final class RestApiTest {
     subscriber.assertError(HttpException.class);
 
     Throwable error = subscriber.getOnErrorEvents().get(0);
-    assertThat(error.getMessage(), is("HTTP 404 models can not be null"));
+    assertThat(error.getMessage(), is("HTTP 404 null"));
   }
 
   @Test public void modelsWithParamResponseFailsWhenInvalidJson() throws IOException {
@@ -249,6 +248,19 @@ public final class RestApiTest {
 
     Integer integer = subscriber.getOnNextEvents().get(0);
     assertThat(integer, is(30));
+  }
+
+  @Test public void modelsWithIdResponseFailsWhenInvalidId() throws IOException {
+    TestSubscriber<Response<Model>> subscriber = new TestSubscriber<>();
+    restApi.id(-1).subscribe(subscriber);
+    subscriber.awaitTerminalEvent();
+    subscriber.assertNoErrors();
+
+    Response<Model> modelResponse = subscriber.getOnNextEvents().get(0);
+    assertFalse(modelResponse.isSuccessful());
+    assertNull(modelResponse.body());
+    assertThat(modelResponse.errorBody().string(),
+        is("-1 does not match with regex ID"));
   }
 
 }
