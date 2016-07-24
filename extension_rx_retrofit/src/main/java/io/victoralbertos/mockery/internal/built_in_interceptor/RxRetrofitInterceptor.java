@@ -21,19 +21,16 @@ import io.victoralbertos.mockery.api.Metadata;
 import io.victoralbertos.mockery.api.built_in_interceptor.ErrorResponseAdapter;
 import io.victoralbertos.mockery.api.built_in_interceptor.RxRetrofit;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.mock.Calls;
 import retrofit2.mock.NetworkBehavior;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.observers.TestSubscriber;
 
 public final class RxRetrofitInterceptor implements Interceptor.Behaviour<RxRetrofit> {
@@ -65,14 +62,8 @@ public final class RxRetrofitInterceptor implements Interceptor.Behaviour<RxRetr
     final ResponseBody responseBody = ResponseBody
         .create(MediaType.parse("application/json"), adaptedErrorMessage);
 
-    Observable observable = callAdapter.adapt(metadata.getMethod(),
+    return callAdapter.adapt(metadata.getMethod(),
         networkBehavior, Calls.response(Response.error(404, responseBody)));
-
-    return observable.onErrorResumeNext(new Func1<Throwable, Observable>() {
-      @Override public Observable call(Throwable throwable) {
-        return Observable.error(httpExceptionUsingReflection(adaptedErrorMessage));
-      }
-    });
   }
 
   @Override public void validate(Object candidate, Metadata<RxRetrofit> metadata) throws AssertionError {
@@ -181,25 +172,6 @@ public final class RxRetrofitInterceptor implements Interceptor.Behaviour<RxRetr
     networkBehavior.setFailurePercent(retrofit.failurePercent());
 
     return networkBehavior;
-  }
-
-  private HttpException httpExceptionUsingReflection(String errorMessage) {
-    final ResponseBody responseBody = ResponseBody
-        .create(MediaType.parse("application/json"), errorMessage);
-
-    Response response = Response.error(404, responseBody);
-
-    try {
-      Field rawResponseField = Response.class.getDeclaredField("rawResponse");
-      rawResponseField.setAccessible(true);
-      okhttp3.Response rawResponse = (okhttp3.Response) rawResponseField.get(response);
-      Field rawResponseMessageField = okhttp3.Response.class.getDeclaredField("message");
-      rawResponseMessageField.setAccessible(true);
-      rawResponseMessageField.set(rawResponse, errorMessage);
-      return new HttpException(response);
-    } catch (Exception e) {
-      return new HttpException(response);
-    }
   }
 
 }

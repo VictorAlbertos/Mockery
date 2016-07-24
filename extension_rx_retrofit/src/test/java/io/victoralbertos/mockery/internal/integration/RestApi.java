@@ -30,6 +30,7 @@ import okhttp3.RequestBody;
 import retrofit2.Response;
 import rx.Observable;
 
+import static io.victoralbertos.mockery.api.built_in_mockery.Valid.Template.ID;
 import static io.victoralbertos.mockery.api.built_in_mockery.Valid.Template.INT;
 import static io.victoralbertos.mockery.internal.integration.Mocks.MockModels;
 
@@ -72,4 +73,7 @@ interface RestApi {
 
   @Valid(value = INT, legal = "30")
   Observable<Integer> integer();
+
+  @DTO(MockModel.class)
+  Observable<Response<Model>> id(@Valid(ID) int id);
 }

@@ -139,14 +139,14 @@ public final class RxRetrofitInterceptorTest {
     Metadata<RxRetrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rxRetrofitInterceptor.onIllegalMock(new AssertionError("BOOM!"), metadata);
+    Observable observable = rxRetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
     TestSubscriber<List<Mock>> subscriber = new TestSubscriber();
     observable.subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     subscriber.assertNoValues();
 
     HttpException httpException = (HttpException) subscriber.getOnErrorEvents().get(0);
-    assertThat(httpException.getMessage(), is("HTTP 404 BOOM!"));
+    assertThat(httpException.getMessage(), is("HTTP 404 null"));
   }
 
   @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Observable_Response_Then_Get_Response_Body_Null()
