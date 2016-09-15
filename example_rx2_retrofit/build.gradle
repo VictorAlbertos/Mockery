@@ -29,6 +29,14 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  testOptions {
+    unitTests.all {
+      setIgnoreFailures(true)
+    }
+  }
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
