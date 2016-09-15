@@ -36,7 +36,7 @@ Mockery supporting Retrofit with responses of type `Call<T>`:
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:0.0.4'
+    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:0.0.5'
 }
 ```
 
@@ -44,7 +44,10 @@ Mockery supporting Retrofit with responses of type `Observable<T>` and `Observab
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_rx_retrofit:0.0.4'
+	  //RxJava1
+    compile 'com.github.VictorAlbertos.Mockery:extension_rx_retrofit:0.0.5'
+    //RxJava2
+    compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:0.0.5'
 }
 ```
 
@@ -75,7 +78,7 @@ dependencies {
 
 Create an `interface` with as much methods as needed to gather the API endpoints. This `interface` needs to be annotated with one of the following [@Interceptor](https://github.com/VictorAlbertos/Mockery/blob/master/core/src/main/java/io/victoralbertos/mockery/api/Interceptor.java) annotations:
 * @Retrofit
-* @RxRetrofit
+* @RxRetrofit/@Rx2Retrofit
 
 ### @Retrofit Interceptor.
 Next `interface` is decorated with [@Retrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/Retrofit.java) `annotation`, which induces Mockery to take care of every aspect related with mocking/validating responses created by Retrofit when using `Call<T>` type. Mockery behaves the same way as an instance of Retrofit does, regarding *threading and http exceptions*. Actually, the `interface` supplied to Retrofit builder should be the same that the one supplied to Mockery (you can [thanks to Jake Wharton](https://github.com/square/retrofit/issues/1828) for this).
@@ -113,7 +116,7 @@ As long as the @Retrofit `annotation`, the previous interface has been decorated
 
 For a complete Retrofit example using `Call<T>`, there is an [android module](https://github.com/VictorAlbertos/Mockery/tree/master/example_retrofit) dedicated to it.
 
-### @RxRetrofit Interceptor.
+### @RxRetrofit/@Rx2Retrofit Interceptor.
 Next `interface` is decorated with [@RxRetrofit](https://github.com/VictorAlbertos/Mockery/blob/master/extension_rx_retrofit/src/main/java/io/victoralbertos/mockery/api/built_in_interceptor/RxRetrofit.java) `annotation`, which inducts Mockery to behave in a similar way that it does when it is annotated with @Retrofit `annotation`, but with the difference that the response type is encapsulated in an `Observable<T>` or `Observable<Response<T>>`. 
 
 
@@ -499,4 +502,3 @@ Another author's libraries:
 * [RxCache](https://github.com/VictorAlbertos/RxCache): Reactive caching library for Android and Java.
 * [RxActivityResult](https://github.com/VictorAlbertos/RxActivityResult): A reactive-tiny-badass-vindictive library to break with the OnActivityResult implementation as it breaks the observables chain. 
 * [RxSocialConnect](https://github.com/VictorAlbertos/RxSocialConnect-Android): OAuth RxJava extension for Android.
-
