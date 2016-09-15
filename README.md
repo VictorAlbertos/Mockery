@@ -44,7 +44,7 @@ Mockery supporting Retrofit with responses of type `Observable<T>` and `Observab
 
 ```gradle
 dependencies {
-	  //RxJava1
+    //RxJava1
     compile 'com.github.VictorAlbertos.Mockery:extension_rx_retrofit:0.0.5'
     //RxJava2
     compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:0.0.5'
