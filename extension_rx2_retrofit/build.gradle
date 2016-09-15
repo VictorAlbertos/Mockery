@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'jacoco'
+group='com.github.VictorAlbertos'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
+dependencies {
+  compile project(':extension_retrofit')
+
+  compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0-RC2'
+  compile "io.reactivex.rxjava2:rxjava:2.0.0-RC2"
+
+  testCompile 'junit:junit:4.12'
+  testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
+}

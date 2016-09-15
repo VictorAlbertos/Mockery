@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    <ProgressBar
+        android:layout_marginTop="10dp"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:text="SELECT MODE"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
+      <Button
+          android:id="@+id/bt_mock"
+          android:text="Mock Api"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <Button
+          android:id="@+id/bt_real"
+          android:text="Real Api"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:text="GET USER"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
+      <EditText
+          android:id="@+id/et_user_name"
+          android:hint="UserName"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <Button
+          android:id="@+id/bt_user_call"
+          android:text="Call Api"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_output_user"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"
+        android:lines="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:text="GET USERS"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:layout_height="wrap_content">
+
+      <EditText
+          android:id="@+id/et_last_id_queried"
+          android:hint="LastIdQueried"
+          android:layout_weight="1.2"
+          android:padding="10dp"
+          android:inputType="number"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et_per_page"
+          android:hint="PerPage"
+          android:layout_weight="0.8"
+          android:padding="10dp"
+          android:inputType="number"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <Button
+          android:id="@+id/bt_users_call"
+          android:text="Call Api"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/colorPrimary"
+        android:id="@+id/rv_users"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:text="GET REPOS"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="3"
+        android:layout_height="wrap_content">
+
+      <EditText
+          android:id="@+id/et_user_name_repo"
+          android:hint="UserName"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et_type"
+          android:hint="Type"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <EditText
+          android:id="@+id/et_direction"
+          android:hint="Direction"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_repos_call"
+        android:text="CALL API"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/colorPrimary"
+        android:id="@+id/rv_repos"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <ProgressBar
+        android:layout_marginTop="10dp"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"/>
+  </LinearLayout>
+</ScrollView>

@@ -1,4 +1,4 @@
-package io.victoralbertos.example_retrofit.presentation;
+package io.victoralbertos.example_rx_retrofit2.presentation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,16 +12,15 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import io.victoralbertos.example_retrofit.R;
-import io.victoralbertos.example_retrofit.data.Repository;
-import io.victoralbertos.example_retrofit.domain.Repo;
-import io.victoralbertos.example_retrofit.domain.User;
-import java.io.IOException;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.victoralbertos.example_rx_retrofit.R;
+import io.victoralbertos.example_rx_retrofit2.data.Repository;
+import io.victoralbertos.example_rx_retrofit2.domain.Repo;
+import io.victoralbertos.example_rx_retrofit2.domain.User;
 import java.util.List;
 import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,19 +58,16 @@ public class MainActivity extends AppCompatActivity {
 
         Repository.POOL
             .getUserByName(userName)
-            .enqueue(new Callback<User>() {
-              @Override public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() != null) {
-                  tv_output_user
-                      .setText(response.body().toString());
-                } else {
-                  showError(response);
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<User>() {
+              @Override public void accept(User user) throws Exception {
+                tv_output_user.setText(user.toString());
               }
-
-              @Override public void onFailure(Call<User> call, Throwable error) {
+            }, new Consumer<Throwable>() {
+              @Override public void accept(Throwable throwable) throws Exception {
                 Toast.makeText(MainActivity.this,
-                    error.getMessage(), Toast.LENGTH_LONG).show();
+                    throwable.getMessage(), Toast.LENGTH_LONG).show();
               }
             });
       }
@@ -94,18 +90,16 @@ public class MainActivity extends AppCompatActivity {
 
         Repository.POOL
             .getUsers(lastIdQueried, perPage)
-            .enqueue(new Callback<List<User>>() {
-              @Override public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.body() != null) {
-                  setUpRecyclerUsers(response.body());
-                } else {
-                  showError(response);
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<List<User>>() {
+              @Override public void accept(List<User> users) throws Exception {
+                setUpRecyclerUsers(users);
               }
-
-              @Override public void onFailure(Call<List<User>> call, Throwable error) {
+            }, new Consumer<Throwable>() {
+              @Override public void accept(Throwable throwable) throws Exception {
                 Toast.makeText(MainActivity.this,
-                    error.getMessage(), Toast.LENGTH_LONG).show();
+                    throwable.getMessage(), Toast.LENGTH_LONG).show();
               }
             });
       }
@@ -156,19 +150,19 @@ public class MainActivity extends AppCompatActivity {
         String type = et_type.getText().toString();
         String direction = et_direction.getText().toString();
 
+
         Repository.POOL
             .getRepos(userName, type, direction)
-            .enqueue(new Callback<List<Repo>>() {
-              @Override public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
-                if (response.body() != null) {
-                  setUpRecyclerRepos(response.body());
-                } else {
-                  showError(response);
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<List<Repo>>() {
+              @Override public void accept(List<Repo> repos) throws Exception {
+                setUpRecyclerRepos(repos);
               }
-              @Override public void onFailure(Call<List<Repo>> call, Throwable error) {
+            }, new Consumer<Throwable>() {
+              @Override public void accept(Throwable throwable) throws Exception {
                 Toast.makeText(MainActivity.this,
-                    error.getMessage(), Toast.LENGTH_LONG).show();
+                    throwable.getMessage(), Toast.LENGTH_LONG).show();
               }
             });
       }
@@ -205,14 +199,7 @@ public class MainActivity extends AppCompatActivity {
       ((TextView)findViewById(R.id.tv_content))
           .setText(repo.toString());
     }
+
   }
 
-  private void showError(Response<?> response) {
-    try {
-      Toast.makeText(MainActivity.this,
-          response.errorBody().string(), Toast.LENGTH_LONG).show();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 }
