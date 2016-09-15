@@ -30,11 +30,11 @@ artifacts {
 dependencies {
   compile project(':core')
 
-  compile 'com.squareup.retrofit2:retrofit:2.0.2'
-  compile 'com.squareup.retrofit2:retrofit-mock:2.0.2'
+  compile 'com.squareup.retrofit2:retrofit:2.1.0'
+  compile 'com.squareup.retrofit2:retrofit-mock:2.1.0'
 
   testCompile 'junit:junit:4.12'
-  testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.2'
-  testCompile 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.2'
-  testCompile 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.2'
+  testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
+  testCompile 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.3'
+  testCompile 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.3'
 }
