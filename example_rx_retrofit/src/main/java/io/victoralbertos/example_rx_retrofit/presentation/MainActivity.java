@@ -17,7 +17,7 @@ import io.victoralbertos.example_rx_retrofit.data.Repository;
 import io.victoralbertos.example_rx_retrofit.domain.Repo;
 import io.victoralbertos.example_rx_retrofit.domain.User;
 import java.util.List;
-import library.recycler_view.OkRecyclerViewAdapter;
+import miguelbcr.ok_adapters.recycler_view.OkRecyclerViewAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
