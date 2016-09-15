@@ -49,9 +49,9 @@ android {
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:24.+'
-  compile 'com.android.support:recyclerview-v7:24.+'
-  compile 'com.github.FuckBoilerplate:OkAdapters:0.1.2'
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support:recyclerview-v7:24.2.0'
+  compile 'com.github.miguelbcr:OkAdapters:0.2.1'
 
   compile "com.squareup.retrofit2:retrofit:2.0.1"
   compile "com.squareup.retrofit2:adapter-rxjava:2.0.1"
