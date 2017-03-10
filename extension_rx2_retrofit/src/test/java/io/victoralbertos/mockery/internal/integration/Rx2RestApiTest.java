@@ -36,25 +36,25 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public final class RestApiTest {
+public final class Rx2RestApiTest {
   @Rule public final ExpectedException exception = ExpectedException.none();
 
-  private RestApi restApi;
+  private Rx2RestApi restApi;
 
   @Before public void init() {
-    restApi = new Mockery.Builder<RestApi>()
-        .mock(RestApi.class)
+    restApi = new Mockery.Builder<Rx2RestApi>()
+        .mock(Rx2RestApi.class)
         .build();
   }
 
   @Test public void modelWithoutCall() {
     try {
-      restApi.modelWithoutObservable();
+      restApi.modelWithoutSingle();
       fail();
     } catch (RuntimeException e) {
-      assertThat(e.getMessage(), is("When checking return type of method RestApi#modelWithoutObservable \n"
-          + "class io.victoralbertos.mockery.internal.integration.Model was found. But only Observable<T> is supported as method return type.\n"
-          + "To fix it, change the return type to Observable<T>.\n"));
+      assertThat(e.getMessage(), is("When checking return type of method Rx2RestApi#modelWithoutSingle \n"
+          + "class io.victoralbertos.mockery.internal.integration.Model was found. But only Single<T> is supported as method return type.\n"
+          + "To fix it, change the return type to Single<T>.\n"));
     }
   }
 
@@ -63,7 +63,7 @@ public final class RestApiTest {
       restApi.modelWithoutDTO();
       fail();
     } catch (RuntimeException e) {
-      assertThat(e.getMessage(), is("When checking method RestApi#modelWithoutDTO \n"
+      assertThat(e.getMessage(), is("When checking method Rx2RestApi#modelWithoutDTO \n"
           + "No @Mockery annotation for return method was found.\n"
           + "To fix it, annotate method with one.\n"));
     }
@@ -74,7 +74,7 @@ public final class RestApiTest {
       restApi.modelWithWrongDTO();
       fail();
     } catch (RuntimeException e) {
-      assertThat(e.getMessage(), is("When checking DTOMockery on method RestApi#modelWithWrongDTO \n"
+      assertThat(e.getMessage(), is("When checking DTOMockery on method Rx2RestApi#modelWithWrongDTO \n"
           + " an attempt to use it with class io.victoralbertos.mockery.internal.integration.Model was found. But it is not a supported type for DTOMockery.\n"
           + "To fix it, use DTOMockery with: [java.util.List<io.victoralbertos.mockery.internal.integration.Model>].\n"));
     }

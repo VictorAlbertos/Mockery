@@ -19,8 +19,8 @@ package io.victoralbertos.example_rx_retrofit2.data;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.victoralbertos.example_rx_retrofit.BuildConfig;
 import io.victoralbertos.example_rx_retrofit2.domain.Repo;
@@ -75,31 +75,31 @@ public enum Repository {
         .build().create(RestApi.class);
   }
 
-  public Observable<User> getUserByName(String username) {
+  public Single<User> getUserByName(String username) {
     return handleResponse(restApi.getUserByName(username));
   }
 
-  public Observable<List<User>> getUsers(int lastIdQueried, int perPage) {
+  public Single<List<User>> getUsers(int lastIdQueried, int perPage) {
     return restApi.getUsers(lastIdQueried, perPage);
   }
 
-  public Observable<List<Repo>> getRepos(String username, String type, String direction) {
+  public Single<List<Repo>> getRepos(String username, String type, String direction) {
     return handleResponse(restApi.getRepos(username, type, direction));
   }
 
-  private <T> Observable<T> handleResponse(Observable<Response<T>> response) {
-    return response.flatMap(new Function<Response<T>, ObservableSource<T>>() {
-      @Override public ObservableSource<T> apply(Response<T> response) throws Exception {
+  private <T> Single<T> handleResponse(Single<Response<T>> response) {
+    return response.flatMap(new Function<Response<T>, SingleSource<T>>() {
+      @Override public SingleSource<T> apply(Response<T> response) throws Exception {
         if (response.isSuccessful()) {
-          return Observable.just(response.body());
+          return Single.just(response.body());
         }
 
         try {
           ResponseError responseError = new Gson()
               .fromJson(response.errorBody().string(), ResponseError.class);
-          return Observable.error(new RuntimeException(responseError.getMessage()));
+          return Single.error(new RuntimeException(responseError.getMessage()));
         } catch (JsonParseException |IOException exception) {
-          return Observable.error(new RuntimeException(exception));
+          return Single.error(new RuntimeException(exception));
         }
       }
     });

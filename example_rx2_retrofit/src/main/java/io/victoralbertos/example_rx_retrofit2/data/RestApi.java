@@ -16,7 +16,8 @@
 
 package io.victoralbertos.example_rx_retrofit2.data;
 
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.victoralbertos.example_rx_retrofit2.data.Mockeries.ReposDTO;
 import io.victoralbertos.example_rx_retrofit2.data.Mockeries.UserDTO;
 import io.victoralbertos.example_rx_retrofit2.data.Mockeries.UsersDTO;
@@ -45,19 +46,24 @@ public interface RestApi {
 
   @Headers(HEADER_API_VERSION)
   @GET("/users/{username}")
-  @DTOArgs(UserDTO.class) Observable<Response<User>> getUserByName(
+  @DTOArgs(UserDTO.class) Completable putSomething(
+      @Valid(value = STRING, legal = "google") @Path("username") String username);
+
+  @Headers(HEADER_API_VERSION)
+  @GET("/users/{username}")
+  @DTOArgs(UserDTO.class) Single<Response<User>> getUserByName(
       @Valid(value = STRING, legal = "google") @Path("username") String username);
 
   @Headers(HEADER_API_VERSION)
   @GET("/users")
   @DTOArgs(UsersDTO.class)
-  Observable<List<User>> getUsers(@Optional @Query("since") int lastIdQueried,
+  Single<List<User>> getUsers(@Optional @Query("since") int lastIdQueried,
       @Optional @Query("per_page") int perPage);
 
   @Headers(HEADER_API_VERSION)
   @GET("/users/{username}/repos")
   @DTO(ReposDTO.class)
-  Observable<Response<List<Repo>>> getRepos(
+  Single<Response<List<Repo>>> getRepos(
       @Valid(value = STRING, legal = "google") @Path("username") String username,
       @Enum(value = {"all", "owner", "member"}, legal = "owner") @Query("type") String type,
       @Enum({"asc", "desc"}) @Query("direction") String direction);

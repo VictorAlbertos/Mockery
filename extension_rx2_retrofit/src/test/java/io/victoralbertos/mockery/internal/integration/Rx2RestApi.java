@@ -16,7 +16,7 @@
 
 package io.victoralbertos.mockery.internal.integration;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.victoralbertos.jolyglot.GsonSpeaker;
 import io.victoralbertos.mockery.api.JsonConverter;
 import io.victoralbertos.mockery.api.built_in_interceptor.Rx2Retrofit;
@@ -36,46 +36,46 @@ import static io.victoralbertos.mockery.internal.integration.Mocks.MockModels;
 
 @Rx2Retrofit(delay = 0, failurePercent = 0, variancePercentage = 0)
 @JsonConverter(GsonSpeaker.class)
-interface RestApi {
+interface Rx2RestApi {
   @DTO(MockModel.class)
-  Model modelWithoutObservable();
+  Model modelWithoutSingle();
 
-  Observable<Model> modelWithoutDTO();
+  Single<Model> modelWithoutDTO();
 
   @DTO(MockModels.class)
-  Observable<Model> modelWithWrongDTO();
+  Single<Model> modelWithWrongDTO();
 
   @DTO(MockModel.class)
-  Observable<Model> model();
+  Single<Model> model();
 
   @DTO(MockModel.class)
-  Observable<Response<Model>> modelResponse();
+  Single<Response<Model>> modelResponse();
 
   @DTO(MockModel.class)
-  Observable<Model> modelWithParams(@RequestBodyDTO(MockModel.class) RequestBody modelJson,
+  Single<Model> modelWithParams(@RequestBodyDTO(MockModel.class) RequestBody modelJson,
       @Optional int optional);
 
   @DTO(MockModel.class)
-  Observable<Response<Model>> modelWithParamsResponse(
+  Single<Response<Model>> modelWithParamsResponse(
       @RequestBodyDTO(MockModel.class) RequestBody modelJson,
       @Optional int optional);
 
   @DTO(MockModel.class)
-  Observable<Model> modelWithWrongMockeryParam(@DTO(MockModels.class) Model model);
+  Single<Model> modelWithWrongMockeryParam(@DTO(MockModels.class) Model model);
 
   @DTO(MockModels.class)
-  Observable<List<Model>> modelsWithParam(@DTOJson(MockModels.class) String modelsJSON);
+  Single<List<Model>> modelsWithParam(@DTOJson(MockModels.class) String modelsJSON);
 
   @DTO(MockModels.class)
-  Observable<Response<List<Model>>> modelsWithParamResponse(
+  Single<Response<List<Model>>> modelsWithParamResponse(
       @DTOJson(MockModels.class) String modelsJSON);
 
   @DTO(MockModels.class)
-  Observable<List<Model>> modelsWithParamWithoutMockery(Integer i1);
+  Single<List<Model>> modelsWithParamWithoutMockery(Integer i1);
 
   @Valid(value = INT, legal = "30")
-  Observable<Integer> integer();
+  Single<Integer> integer();
 
   @DTO(MockModel.class)
-  Observable<Response<Model>> id(@Valid(ID) int id);
+  Single<Response<Model>> id(@Valid(ID) int id);
 }

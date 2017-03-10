@@ -16,7 +16,7 @@
 
 package io.victoralbertos.mockery.internal.built_in_interceptor;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import io.victoralbertos.mockery.api.Interceptor;
 import io.victoralbertos.mockery.api.Metadata;
@@ -43,17 +43,17 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
         .build());
   }
 
-  @Override public Observable onLegalMock(final Object mock, final Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsObservable(metadata);
-    checkTypeMockIsNotObservableNeitherResponse(metadata, mock);
+  @Override public Single onLegalMock(final Object mock, final Metadata<Rx2Retrofit> metadata) {
+    checkReturnMethodTypeIsSingle(metadata);
+    checkTypeMockIsNotSingleNeitherResponse(metadata, mock);
 
     NetworkBehavior networkBehavior = networkBehaviour(metadata);
     return callAdapter.adapt(metadata.getMethod(),
         networkBehavior, Calls.response(mock));
   }
 
-  @Override public Observable onIllegalMock(final AssertionError assertionError, final Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsObservable(metadata);
+  @Override public Single onIllegalMock(final AssertionError assertionError, final Metadata<Rx2Retrofit> metadata) {
+    checkReturnMethodTypeIsSingle(metadata);
 
     final String errorMessage = assertionError.getMessage() != null ? assertionError.getMessage() : "";
     final String adaptedErrorMessage = adaptErrorResponse(errorMessage, metadata);
@@ -67,29 +67,29 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
   }
 
   @Override public void validate(Object candidate, Metadata<Rx2Retrofit> metadata) throws AssertionError {
-    checkReturnMethodTypeIsObservable(metadata);
-    Observable observable = (Observable) candidate;
+    checkReturnMethodTypeIsSingle(metadata);
+    Single single = (Single) candidate;
 
-    TestObserver testSubscriber = observable.test();
-    testSubscriber.awaitTerminalEvent();
-    testSubscriber.assertNoErrors();
-    testSubscriber.assertValueCount(1);
+    TestObserver testObserver = single.test();
+    testObserver.awaitTerminalEvent();
+    testObserver.assertNoErrors();
+    testObserver.assertValueCount(1);
 
-    Object enclosingObject = testSubscriber.values().get(0);
+    Object enclosingObject = testObserver.values().get(0);
 
     if (enclosingObject instanceof Response) {
       Response response = (Response) enclosingObject;
-      assert response.isSuccessful() : "Response must be successful";
-      assert response.body() != null : "Body must be not null";
-      assert response.errorBody() == null : "Error body must be null";
+      if (!response.isSuccessful()) throw new AssertionError("Response must be successful");
+      if (response.body() == null) throw new AssertionError("Body must be not null");
+      if (response.errorBody() != null) throw new AssertionError("Error body must be null");
     }
   }
 
   @Override public Object adaptResponse(Object response, Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsObservable(metadata);
-    Observable observable = (Observable) response;
+    checkReturnMethodTypeIsSingle(metadata);
+    Single single = (Single) response;
 
-    Object payload = observable.blockingFirst();
+    Object payload = single.blockingGet();
 
     if (payload instanceof Response) {
       Object body = ((Response) payload).body();
@@ -100,7 +100,7 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
   }
 
   @Override public Type adaptType(Type responseType, Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsObservable(metadata);
+    checkReturnMethodTypeIsSingle(metadata);
 
     ParameterizedType observableType = (ParameterizedType) responseType;
 
@@ -115,12 +115,12 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
     }
   }
 
-  private void checkReturnMethodTypeIsObservable(Metadata<Rx2Retrofit> metadata) {
+  private void checkReturnMethodTypeIsSingle(Metadata<Rx2Retrofit> metadata) {
     Type returnMethodType = metadata.getType();
 
     if (returnMethodType instanceof ParameterizedType) {
       Type type = ((ParameterizedType)returnMethodType).getRawType();
-      if (type == Observable.class) return;
+      if (type == Single.class) return;
     }
 
     String message = Rx2Messages.illegalMethodReturnType(metadata.getMockingClass(),
@@ -128,8 +128,8 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
     throw new RuntimeException(message);
   }
 
-  private void checkTypeMockIsNotObservableNeitherResponse(Metadata<Rx2Retrofit> metadata, Object mock) {
-    if (mock instanceof Observable) {
+  private void checkTypeMockIsNotSingleNeitherResponse(Metadata<Rx2Retrofit> metadata, Object mock) {
+    if (mock instanceof Single) {
       String message = Rx2Messages.illegalMockType(metadata.getMockingClass(),
           metadata.getMethod());
       throw new RuntimeException(message);

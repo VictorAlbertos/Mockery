@@ -16,12 +16,12 @@
 
 package io.victoralbertos.mockery.api.built_in_interceptor;
 
+import io.reactivex.Single;
 import io.victoralbertos.mockery.api.Interceptor;
 import io.victoralbertos.mockery.internal.built_in_interceptor.ByPassErrorResponseAdapter;
 import io.victoralbertos.mockery.internal.built_in_interceptor.Rx2RetrofitInterceptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.Observable;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -32,8 +32,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * An {@link Interceptor} to supply a canonical behaviour expected by any http-server when handling responses using Retrofit, both success and failure ones.
- * Every declared method has to return a {@link Observable} object and any DTO annotated has to limit its creation scope to the DTO itself,
- * that’s mean that this interceptor is responsible for creating and managing the {@link Observable} objects, not the client.
+ * Every declared method has to return a {@link Single} object and any DTO annotated has to limit its creation scope to the DTO itself,
+ * that’s mean that this interceptor is responsible for creating and managing the {@link Single} objects, not the client.
  * To use it, annotate Retrofit interface with this RxRetrofit annotation.
  */
 public @interface Rx2Retrofit {

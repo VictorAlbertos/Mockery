@@ -16,7 +16,7 @@
 
 package io.victoralbertos.mockery.internal.built_in_interceptor;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import io.victoralbertos.jolyglot.Types;
 import io.victoralbertos.mockery.api.Metadata;
@@ -52,7 +52,7 @@ public final class Rx2RetrofitInterceptorTest {
     rx2RetrofitInterceptor = new Rx2RetrofitInterceptor();
   }
 
-  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Not_Observable_Then_Get_Exception()
+  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Not_Single_Then_Get_Exception()
       throws NoSuchMethodException {
     Method method = Providers.class.getDeclaredMethod("mock");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
@@ -63,9 +63,9 @@ public final class Rx2RetrofitInterceptorTest {
     rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
   }
 
-  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Not_Parameterized_Observable_Then_Get_Exception()
+  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Not_Parameterized_Single_Then_Get_Exception()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("notParameterizedObservable");
+    Method method = Providers.class.getDeclaredMethod("notParameterizedSingle");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
@@ -74,7 +74,7 @@ public final class Rx2RetrofitInterceptorTest {
     rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
   }
 
-  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Not_Observable_Then_Get_Exception()
+  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Not_Single_Then_Get_Exception()
       throws NoSuchMethodException {
     Method method = Providers.class.getDeclaredMethod("mock");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
@@ -85,25 +85,25 @@ public final class Rx2RetrofitInterceptorTest {
     rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
   }
 
-  @Test public void When_Mock_Seed_Is_Type_Observable_Then_Get_Exception() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+  @Test public void When_Mock_Seed_Is_Type_Single_Then_Get_Exception() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
     exception.expect(RuntimeException.class);
-    rx2RetrofitInterceptor.onLegalMock(Observable.just(new Mock()), metadata);
+    rx2RetrofitInterceptor.onLegalMock(Single.just(new Mock()), metadata);
   }
 
-  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Observable_Then_Get_Object()
+  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Single_Then_Get_Object()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
-    TestObserver<Mock> subscriber = observable.test();
+    Single single = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    TestObserver<Mock> subscriber = single.test();
     subscriber.awaitTerminalEvent();
     subscriber.assertNoErrors();
     subscriber.assertValueCount(1);
@@ -112,15 +112,15 @@ public final class Rx2RetrofitInterceptorTest {
     assertNotNull(mock);
   }
 
-  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Observable_Response_Then_Get_Response()
+  @Test public void When_Call_OnLegalMock_If_Method_Return_Type_Is_Single_Response_Then_Get_Response()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
-    TestObserver<Response<Mock>> subscriber = observable.test();
+    Single single = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    TestObserver<Response<Mock>> subscriber = single.test();
     subscriber.awaitTerminalEvent();
     subscriber.assertNoErrors();
     subscriber.assertValueCount(1);
@@ -130,15 +130,15 @@ public final class Rx2RetrofitInterceptorTest {
     assertNotNull(response.body());
   }
 
-  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Observable_Then_Get_Error_Observable()
+  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Single_Then_Get_Error_Single()
       throws NoSuchMethodException, IOException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
-    TestObserver<List<Mock>> subscriber = observable.test();
+    Single single = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
+    TestObserver<List<Mock>> subscriber = single.test();
 
     subscriber.awaitTerminalEvent();
     subscriber.assertNoValues();
@@ -147,16 +147,16 @@ public final class Rx2RetrofitInterceptorTest {
     assertThat(httpException.getMessage(), is("HTTP 404 null"));
   }
 
-  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Observable_Response_Then_Get_Response_Body_Null()
+  @Test public void When_Call_OnIllegalMock_If_Method_Return_Type_Is_Single_Response_Then_Get_Response_Body_Null()
       throws NoSuchMethodException, IOException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor
+    Single single = rx2RetrofitInterceptor
         .onIllegalMock(new AssertionError("BOOM!"), metadata);
-    TestObserver<Response<Mock>> subscriber = observable.test();
+    TestObserver<Response<Mock>> subscriber = single.test();
     subscriber.awaitTerminalEvent();
     subscriber.assertNoErrors();
     subscriber.assertValueCount(1);
@@ -169,55 +169,55 @@ public final class Rx2RetrofitInterceptorTest {
 
   @Test public void When_Call_OnLegalMock_With_Delay_Then_Delay()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitDelayedAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
-    checkDelay(observable, 100);
+    Single single = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    checkDelay(single, 100);
   }
 
   @Test public void When_Call_OnLegalMock_Response_With_Delay_Then_Delay() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation = PlaceholderRetrofitDelayedAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
-    checkDelay(observable, 100);
+    Single single = rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    checkDelay(single, 100);
   }
 
   @Test public void When_Call_OnIllegalMock_With_Delay_Then_Delay() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitDelayedAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
-    checkDelay(observable, 100);
+    Single single = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
+    checkDelay(single, 100);
   }
 
   @Test public void When_Call_OnIllegalMock_Response_With_Delay_Then_Delay() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation = PlaceholderRetrofitDelayedAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
-    checkDelay(observable, 100);
+    Single single = rx2RetrofitInterceptor.onIllegalMock(new AssertionError(), metadata);
+    checkDelay(single, 100);
   }
 
   @Test public void When_Call_OnIllegalMock_Response_With_Custom_Response_Adapter_Adapt_It()
       throws NoSuchMethodException, IOException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation =
         PlaceholderRetrofitErrorResponseAdapterAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable observable = rx2RetrofitInterceptor.onIllegalMock(new AssertionError("BOOM!"), metadata);
-    TestObserver<Response<Mock>> subscriber = observable.test();
+    Single single = rx2RetrofitInterceptor.onIllegalMock(new AssertionError("BOOM!"), metadata);
+    TestObserver<Response<Mock>> subscriber = single.test();
     subscriber.awaitTerminalEvent();
     subscriber.assertNoErrors();
     subscriber.assertValueCount(1);
@@ -227,11 +227,11 @@ public final class Rx2RetrofitInterceptorTest {
     assertThat(response.errorBody().string(), is("{'message':'BOOM!'}"));
   }
 
-  private void checkDelay(Observable observable, long millisDelayed) {
+  private void checkDelay(Single single, long millisDelayed) {
     long startNanos = System.nanoTime();
 
     TestObserver subscriber = new TestObserver();
-    observable.subscribe(subscriber);
+    single.subscribe(subscriber);
     subscriber.awaitTerminalEvent();
 
     long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNanos);
@@ -240,41 +240,41 @@ public final class Rx2RetrofitInterceptorTest {
         + " MillisDelayed: " + millisDelayed, tookMs >= millisDelayed);
   }
 
-  @Test public void When_Call_Validate_With_Observable_Then_Do_Not_Throw_Assertion()
+  @Test public void When_Call_Validate_With_Single_Then_Do_Not_Throw_Assertion()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    rx2RetrofitInterceptor.validate(Observable.just(new Mock()), metadata);
+    rx2RetrofitInterceptor.validate(Single.just(new Mock()), metadata);
   }
 
-  @Test public void When_Call_Validate_With_Observable_Error_Then_Throw_Assertion()
+  @Test public void When_Call_Validate_With_Single_Error_Then_Throw_Assertion()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
     exception.expect(AssertionError.class);
-    rx2RetrofitInterceptor.validate(Observable.error(new AssertionError("BOOM!")),
+    rx2RetrofitInterceptor.validate(Single.error(new AssertionError("BOOM!")),
         metadata);
   }
 
-  @Test public void When_Call_Validate_With_Observable_Response_Then_Do_Not_Throw_Assertion()
+  @Test public void When_Call_Validate_With_Single_Response_Then_Do_Not_Throw_Assertion()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    rx2RetrofitInterceptor.validate(Observable.just(Response.success(new Mock())), metadata);
+    rx2RetrofitInterceptor.validate(Single.just(Response.success(new Mock())), metadata);
   }
 
-  @Test public void When_Call_Validate_With_Observable_Response_Error_Then_Throw_Assertion_Error()
+  @Test public void When_Call_Validate_With_Single_Response_Error_Then_Throw_Assertion_Error()
       throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
@@ -284,35 +284,35 @@ public final class Rx2RetrofitInterceptorTest {
     Response<Mock> response = Response.error(404, responseBody);
 
     exception.expect(AssertionError.class);
-    rx2RetrofitInterceptor.validate(Observable.just(response), metadata);
+    rx2RetrofitInterceptor.validate(Single.just(response), metadata);
   }
 
-  @Test public void When_Call_Adapt_Response_With_Observable_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+  @Test public void When_Call_Adapt_Response_With_Single_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("single");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable<Mock> oMock =
-        (Observable<Mock>) rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    Single<Mock> oMock =
+        (Single<Mock>) rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
     Mock mock = (Mock) rx2RetrofitInterceptor.adaptResponse(oMock, metadata);
     assertNotNull(mock);
   }
 
-  @Test public void When_Call_Adapt_Response_With_Observable_Response_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+  @Test public void When_Call_Adapt_Response_With_Single_Response_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
         method, null, annotation, method.getGenericReturnType());
 
-    Observable<Mock> oMock =
-        (Observable<Mock>) rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
+    Single<Mock> oMock =
+        (Single<Mock>) rx2RetrofitInterceptor.onLegalMock(new Mock(), metadata);
     Mock mock = (Mock) rx2RetrofitInterceptor.adaptResponse(oMock, metadata);
     assertNotNull(mock);
   }
 
-  @Test public void When_Call_Adapt_Type_With_Observable_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observable");
+  @Test public void When_Call_Adapt_Type_With_Single_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("single");
 
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
@@ -327,8 +327,8 @@ public final class Rx2RetrofitInterceptorTest {
     assertEquals(expectedType, adaptedType);
   }
 
-  @Test public void When_Call_Adapt_Type_With_Observable_List_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableMocks");
+  @Test public void When_Call_Adapt_Type_With_Single_List_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("singleMocks");
 
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
@@ -343,8 +343,8 @@ public final class Rx2RetrofitInterceptorTest {
     assertEquals(expectedType, adaptedType);
   }
 
-  @Test public void When_Call_Adapt_Type_With_Observable_Response_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMock");
+  @Test public void When_Call_Adapt_Type_With_Single_Response_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("singleResponseMock");
 
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
@@ -359,8 +359,8 @@ public final class Rx2RetrofitInterceptorTest {
     assertEquals(expectedType, adaptedType);
   }
 
-  @Test public void When_Call_Adapt_Type_With_Observable_Response_List_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
-    Method method = Providers.class.getDeclaredMethod("observableResponseMocks");
+  @Test public void When_Call_Adapt_Type_With_Single_Response_List_Mock_Then_Unwrap_Its_Value() throws NoSuchMethodException {
+    Method method = Providers.class.getDeclaredMethod("singleResponseMocks");
 
     Rx2Retrofit annotation = PlaceholderRetrofitAnnotation.class.getAnnotation(Rx2Retrofit.class);
     Metadata<Rx2Retrofit> metadata = new Metadata(Providers.class,
@@ -380,12 +380,12 @@ public final class Rx2RetrofitInterceptorTest {
   private interface Providers {
     Response response();
     Mock mock();
-    Observable notParameterizedObservable();
+    Single notParameterizedSingle();
 
-    Observable<Mock> observable();
-    Observable<Response<Mock>> observableResponseMock();
-    Observable<List<Mock>> observableMocks();
-    Observable<Response<List<Mock>>> observableResponseMocks();
+    Single<Mock> single();
+    Single<Response<Mock>> singleResponseMock();
+    Single<List<Mock>> singleMocks();
+    Single<Response<List<Mock>>> singleResponseMocks();
   }
 
 
