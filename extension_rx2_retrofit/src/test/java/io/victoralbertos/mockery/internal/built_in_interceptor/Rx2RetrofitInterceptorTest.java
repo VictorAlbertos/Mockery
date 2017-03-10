@@ -16,7 +16,6 @@
 
 package io.victoralbertos.mockery.internal.built_in_interceptor;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.victoralbertos.jolyglot.Types;
@@ -34,6 +33,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 import static org.hamcrest.core.Is.is;

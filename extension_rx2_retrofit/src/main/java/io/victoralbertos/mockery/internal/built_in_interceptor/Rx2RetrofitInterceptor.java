@@ -16,7 +16,6 @@
 
 package io.victoralbertos.mockery.internal.built_in_interceptor;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.victoralbertos.mockery.api.Interceptor;
@@ -30,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.mock.Calls;
 import retrofit2.mock.NetworkBehavior;
 
