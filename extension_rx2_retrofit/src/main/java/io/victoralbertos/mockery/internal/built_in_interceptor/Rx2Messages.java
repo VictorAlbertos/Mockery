@@ -23,8 +23,8 @@ final class Rx2Messages {
 
   static String illegalMethodReturnType(Class mockingClass, Method method, Type gotType) {
     String message = "When checking return type of method %s#%s \n"
-        + "%s was found. But only Single<T> is supported as method return type.\n"
-        + "To fix it, change the return type to Single<T>.\n";
+        + "%s was found. But only Single<T> and Completable are supported as method return type.\n"
+        + "To fix it, change the return type to Single<T> or Completable.\n";
 
     return String.format(message, mockingClass.getSimpleName(),
         method.getName(), gotType);

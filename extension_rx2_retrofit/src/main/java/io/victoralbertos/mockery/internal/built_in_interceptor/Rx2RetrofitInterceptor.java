@@ -16,6 +16,7 @@
 
 package io.victoralbertos.mockery.internal.built_in_interceptor;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import io.victoralbertos.mockery.api.Interceptor;
@@ -43,8 +44,8 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
         .build());
   }
 
-  @Override public Single onLegalMock(final Object mock, final Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsSingle(metadata);
+  @Override public Object onLegalMock(final Object mock, final Metadata<Rx2Retrofit> metadata) {
+    checkReturnMethodTypeIsSingleOrCompletable(metadata);
     checkTypeMockIsNotSingleNeitherResponse(metadata, mock);
 
     NetworkBehavior networkBehavior = networkBehaviour(metadata);
@@ -52,8 +53,8 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
         networkBehavior, Calls.response(mock));
   }
 
-  @Override public Single onIllegalMock(final AssertionError assertionError, final Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsSingle(metadata);
+  @Override public Object onIllegalMock(final AssertionError assertionError, final Metadata<Rx2Retrofit> metadata) {
+    checkReturnMethodTypeIsSingleOrCompletable(metadata);
 
     final String errorMessage = assertionError.getMessage() != null ? assertionError.getMessage() : "";
     final String adaptedErrorMessage = adaptErrorResponse(errorMessage, metadata);
@@ -67,7 +68,17 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
   }
 
   @Override public void validate(Object candidate, Metadata<Rx2Retrofit> metadata) throws AssertionError {
-    checkReturnMethodTypeIsSingle(metadata);
+    checkReturnMethodTypeIsSingleOrCompletable(metadata);
+
+    if (candidate instanceof Completable) {
+      Completable completable = (Completable) candidate;
+      TestObserver testObserver = completable.test();
+      testObserver.awaitTerminalEvent();
+      testObserver.assertNoErrors();
+      testObserver.assertComplete();
+      return;
+    }
+
     Single single = (Single) candidate;
 
     TestObserver testObserver = single.test();
@@ -86,7 +97,10 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
   }
 
   @Override public Object adaptResponse(Object response, Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsSingle(metadata);
+    checkReturnMethodTypeIsSingleOrCompletable(metadata);
+
+    if (response instanceof Completable) return null;
+
     Single single = (Single) response;
 
     Object payload = single.blockingGet();
@@ -100,27 +114,31 @@ public final class Rx2RetrofitInterceptor implements Interceptor.Behaviour<Rx2Re
   }
 
   @Override public Type adaptType(Type responseType, Metadata<Rx2Retrofit> metadata) {
-    checkReturnMethodTypeIsSingle(metadata);
+    checkReturnMethodTypeIsSingleOrCompletable(metadata);
 
-    ParameterizedType observableType = (ParameterizedType) responseType;
+    if (!(responseType instanceof ParameterizedType)) return Object.class;
+
+    ParameterizedType singleType = (ParameterizedType) responseType;
 
     if (isReturnMethodTypeResponse(metadata)) {
       ParameterizedType responseParameterizedType = (ParameterizedType)
-          observableType.getActualTypeArguments()[0];
+          singleType.getActualTypeArguments()[0];
       Type enclosingType = responseParameterizedType.getActualTypeArguments()[0];
       return enclosingType;
     } else {
-      Type enclosingType = observableType.getActualTypeArguments()[0];
+      Type enclosingType = singleType.getActualTypeArguments()[0];
       return enclosingType;
     }
   }
 
-  private void checkReturnMethodTypeIsSingle(Metadata<Rx2Retrofit> metadata) {
+  private void checkReturnMethodTypeIsSingleOrCompletable(Metadata<Rx2Retrofit> metadata) {
     Type returnMethodType = metadata.getType();
 
     if (returnMethodType instanceof ParameterizedType) {
       Type type = ((ParameterizedType)returnMethodType).getRawType();
       if (type == Single.class) return;
+    } else {
+      if (returnMethodType == Completable.class) return;
     }
 
     String message = Rx2Messages.illegalMethodReturnType(metadata.getMockingClass(),

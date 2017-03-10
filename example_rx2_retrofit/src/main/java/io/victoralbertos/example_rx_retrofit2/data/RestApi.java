@@ -27,6 +27,7 @@ import io.victoralbertos.mockery.api.built_in_interceptor.ErrorResponseAdapter;
 import io.victoralbertos.mockery.api.built_in_interceptor.Rx2Retrofit;
 import io.victoralbertos.mockery.api.built_in_mockery.DTO;
 import io.victoralbertos.mockery.api.built_in_mockery.DTOArgs;
+import io.victoralbertos.mockery.api.built_in_mockery.NoDTO;
 import io.victoralbertos.mockery.api.built_in_mockery.Enum;
 import io.victoralbertos.mockery.api.built_in_mockery.Optional;
 import io.victoralbertos.mockery.api.built_in_mockery.Valid;
@@ -34,6 +35,7 @@ import java.util.List;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -45,9 +47,8 @@ public interface RestApi {
   String HEADER_API_VERSION = "Accept: application/vnd.github.v3+json";
 
   @Headers(HEADER_API_VERSION)
-  @GET("/users/{username}")
-  @DTOArgs(UserDTO.class) Completable putSomething(
-      @Valid(value = STRING, legal = "google") @Path("username") String username);
+  @PUT("/users/{username}")
+  @NoDTO Completable putSomething(@Valid(value = STRING) @Path("username") String something);
 
   @Headers(HEADER_API_VERSION)
   @GET("/users/{username}")

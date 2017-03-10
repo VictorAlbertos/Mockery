@@ -80,9 +80,9 @@ public final class RxRetrofitInterceptor implements Interceptor.Behaviour<RxRetr
 
     if (enclosingObject instanceof Response) {
       Response response = (Response) enclosingObject;
-      assert response.isSuccessful() : "Response must be successful";
-      assert response.body() != null : "Body must be not null";
-      assert response.errorBody() == null : "Error body must be null";
+      if (!response.isSuccessful()) throw new AssertionError("Response must be successful");
+      if (response.body() == null) throw new AssertionError("Body must be not null");
+      if (response.errorBody() != null) throw new AssertionError("Error body must be null");
     }
   }
 

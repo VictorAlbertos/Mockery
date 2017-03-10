@@ -1,3 +1,8 @@
+Version 1.0.0 *(2016-10-30)*
+----------------------------
+
+Correct reactive base types, replace Observable with Single and Completable.
+
 Version 0.0.7 *(2016-10-30)*
 ----------------------------
 

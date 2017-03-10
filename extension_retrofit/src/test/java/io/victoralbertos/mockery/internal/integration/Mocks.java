@@ -27,9 +27,10 @@ public final class Mocks {
     }
 
     @Override public void validate(Model candidate) throws AssertionError {
-      assert candidate != null : "model can not be null";
-      assert candidate.getS1().equals(Model.class.getName())
-          : "model.s1 must be equal to " + Model.class.getName();
+      if (candidate == null) throw new AssertionError("model can not be null");
+      if (!candidate.getS1().equals(Model.class.getName())) {
+        throw new AssertionError("model.s1 must be equal to " + Model.class.getName());
+      }
     }
   }
 
@@ -39,10 +40,11 @@ public final class Mocks {
     }
 
     @Override public void validate(List<Model> candidate) throws AssertionError {
-      assert candidate != null : "models can not be null";
-      assert candidate.size() == 1 : "models must has one entry";
-      assert candidate.get(0).getS1().equals(Model.class.getName())
-          : "model.s1 must be equal to " + Model.class.getName();
+      if (candidate == null) throw new AssertionError("models can not be null");
+      if (candidate.size() != 1) throw new AssertionError("models must has one entry");
+      if (!candidate.get(0).getS1().equals(Model.class.getName())) {
+        throw new AssertionError("model.s1 must be equal to " + Model.class.getName());
+      }
     }
   }
 }

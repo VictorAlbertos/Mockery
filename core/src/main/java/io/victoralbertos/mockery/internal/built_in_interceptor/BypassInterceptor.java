@@ -16,7 +16,7 @@ public final class BypassInterceptor implements Interceptor.Behaviour<Annotation
   }
 
   @Override public void validate(Object response, Metadata<Annotation> metadata) throws AssertionError {
-    assert response != null : "response can not be null";
+    if (response == null) throw new AssertionError("response can not be null");
   }
 
   @Override public Object adaptResponse(Object response, Metadata<Annotation> metadata) {

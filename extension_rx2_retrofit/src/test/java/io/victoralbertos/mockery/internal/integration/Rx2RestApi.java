@@ -16,12 +16,14 @@
 
 package io.victoralbertos.mockery.internal.integration;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.victoralbertos.jolyglot.GsonSpeaker;
 import io.victoralbertos.mockery.api.JsonConverter;
 import io.victoralbertos.mockery.api.built_in_interceptor.Rx2Retrofit;
 import io.victoralbertos.mockery.api.built_in_mockery.DTO;
 import io.victoralbertos.mockery.api.built_in_mockery.DTOJson;
+import io.victoralbertos.mockery.api.built_in_mockery.NoDTO;
 import io.victoralbertos.mockery.api.built_in_mockery.Optional;
 import io.victoralbertos.mockery.api.built_in_mockery.RequestBodyDTO;
 import io.victoralbertos.mockery.api.built_in_mockery.Valid;
@@ -47,6 +49,9 @@ interface Rx2RestApi {
 
   @DTO(MockModel.class)
   Single<Model> model();
+
+  @NoDTO
+  Completable completableModel();
 
   @DTO(MockModel.class)
   Single<Response<Model>> modelResponse();

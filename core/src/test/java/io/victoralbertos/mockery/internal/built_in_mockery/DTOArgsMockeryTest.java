@@ -84,7 +84,7 @@ public final class DTOArgsMockeryTest {
     }
 
     @Override public void validate(Mock candidate) throws AssertionError {
-      assert candidate.s1.equals(DTOArgsPass.class.getName());
+      if (!candidate.s1.equals(DTOArgsPass.class.getName())) throw new AssertionError();
     }
 
   }

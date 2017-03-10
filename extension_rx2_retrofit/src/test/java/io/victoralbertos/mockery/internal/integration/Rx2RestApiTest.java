@@ -53,8 +53,8 @@ public final class Rx2RestApiTest {
       fail();
     } catch (RuntimeException e) {
       assertThat(e.getMessage(), is("When checking return type of method Rx2RestApi#modelWithoutSingle \n"
-          + "class io.victoralbertos.mockery.internal.integration.Model was found. But only Single<T> is supported as method return type.\n"
-          + "To fix it, change the return type to Single<T>.\n"));
+          + "class io.victoralbertos.mockery.internal.integration.Model was found. But only Single<T> and Completable are supported as method return type.\n"
+          + "To fix it, change the return type to Single<T> or Completable.\n"));
     }
   }
 
@@ -88,6 +88,13 @@ public final class Rx2RestApiTest {
 
     Model model = subscriber.values().get(0);
     assertThat(model.getS1(), is(Model.class.getName()));
+  }
+
+  @Test public void completableModel() {
+    TestObserver<Void> subscriber = restApi.completableModel().test();
+    subscriber.awaitTerminalEvent();
+    subscriber.assertNoErrors();
+    subscriber.assertComplete();
   }
 
   @Test public void modelResponse() {
