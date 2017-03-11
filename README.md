@@ -36,7 +36,7 @@ Mockery supporting Retrofit with responses of type `Call<T>`:
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:1.0.0'
+    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:1.0.1'
 }
 ```
 
@@ -44,7 +44,7 @@ Mockery supporting Retrofit with responses of type `Single<T>`, `Single<Response
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:1.0.0'
+    compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:1.0.1'
 }
 ```
 
@@ -64,8 +64,8 @@ Target module *build.gradle* script:
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'com.github.VictorAlbertos.Mockery:test_compiler:1.0.0'
-  	provided 'com.github.VictorAlbertos.Mockery:test_runtime:1.0.0'
+    apt 'com.github.VictorAlbertos.Mockery:test_compiler:1.0.1'
+  	provided 'com.github.VictorAlbertos.Mockery:test_runtime:1.0.1'
   	provided 'org.glassfish:javax.annotation:10.0-b28'
   	provided 'junit:junit:4.12'
 }
@@ -242,6 +242,19 @@ public final class RestApiTest extends RestApiTest_ {
 
 The generated code hides its internal details using some sort of [Robot pattern](https://realm.io/news/kau-jake-wharton-testing-robots/), which provides a cleaner legibility of the generated code. Plus, the order in which the tests are executed is based on the position at which the methods were declared in the original `interface`.
 
+If for some reason an specific method requires to not generate its companion test, just annotate it with `@SkipTest` and Mockery will skip it.  
+
+```java
+@Retrofit
+public interface RestApi {
+
+  @GET("/users/{username}")
+  @SkipTest
+  @DTOArgs(UserDTO.class) Call<User> getUserByName(
+      @Valid(value = STRING, legal = "google") @Path("username") String username);
+
+}
+```
 
 ## <a name="mockery_annotations"></a> Mockery annotations.
 

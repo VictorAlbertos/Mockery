@@ -59,6 +59,7 @@ public final class MockeryProcessor extends AbstractProcessor {
       try {
         TestClass testClass = getTestClass.from(element);
         if (testClass == null) continue;
+        if (testClass.methods.isEmpty()) continue;
 
         JavaFile javaFile = brewJavaFile.from(testClass);
         javaFile.writeTo(filer);

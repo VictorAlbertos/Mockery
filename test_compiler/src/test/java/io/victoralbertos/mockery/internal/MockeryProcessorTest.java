@@ -551,4 +551,70 @@ public final class MockeryProcessorTest {
         .generatesSources(expectedSource);
   }
 
+  @Test public void With_Skip() throws Exception {
+    JavaFileObject source = JavaFileObjects.forSourceString("Skip", "" +
+        "package test;\n"
+        +"import io.victoralbertos.mockery.api.SkipTest;\n"
+        + "import io.victoralbertos.mockery.api.built_in_interceptor.Bypass;\n"
+        + "import io.victoralbertos.mockery.api.built_in_mockery.Valid;\n"
+        + "import java.util.List;\n"
+        + "\n"
+        + "@Bypass\n"
+        + "interface Skip {\n"
+        + "  @SkipTest\n"
+        + "  @Valid(Valid.Template.STRING)\n"
+        + "  List<String> method();\n"
+        + "\n"
+        + "  @Valid(Valid.Template.STRING)\n"
+        + "  List<String> method2();\n"
+        + "}");
+
+    JavaFileObject expectedSource = JavaFileObjects.forSourceString("test/SkipTest_", "" +
+        "package test;\n"
+        + "import io.victoralbertos.mockery.api.Order;\n"
+        + "import io.victoralbertos.mockery.internal.OrderedRunner;\n"
+        + "import io.victoralbertos.mockery.internal.Robot;\n"
+        + "import io.victoralbertos.mockery.internal.RobotBuilder;\n"
+        + "import java.lang.String;\n"
+        + "import java.util.List;\n"
+        + "import javax.annotation.Generated;\n"
+        + "import org.junit.Rule;\n"
+        + "import org.junit.Test;\n"
+        + "import org.junit.rules.ExpectedException;\n"
+        + "import org.junit.runner.RunWith;\n"
+        + "\n"
+        + "@Generated(\n"
+        + "    value = \"io.victoralbertos.mockery.internal.MockeryProcessor\",\n"
+        + "    comments = \"Generated code from Mockery. Don't modify. Or modify. It doesn't matter.\"\n"
+        + ")\n"
+        + "@RunWith(OrderedRunner.class)\n"
+        + "public abstract class SkipTest_ {\n"
+        + "  @Rule\n"
+        + "  public final ExpectedException exception = ExpectedException.none();\n"
+        + "\n"
+        + "  protected abstract Skip skip();\n"
+        + "\n"
+        + "  @Test\n"
+        + "  @Order(0)\n"
+        + "  public void When_Call_method2_Then_Get_Response() {\n"
+        + "    // Init robot tester \n"
+        + "    Robot robot = RobotBuilder\n"
+        + "                .test(Skip.class)\n"
+        + "                .onMethod(\"method2\")\n"
+        + "                .build();\n"
+        + "\n"
+        + "     // Perform and validate response \n"
+        + "    List<String> response = skip().method2();\n"
+        + "    robot.validateResponse(response);\n"
+        + "  }\n"
+        + "}");
+
+    assertAbout(JavaSourceSubjectFactory
+        .javaSource()).that(source)
+        .processedWith(new MockeryProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(expectedSource);
+  }
+
 }

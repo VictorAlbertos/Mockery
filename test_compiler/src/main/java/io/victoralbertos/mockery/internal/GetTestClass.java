@@ -6,8 +6,10 @@ import com.squareup.javapoet.TypeName;
 import com.sun.tools.javac.code.Symbol;
 import io.victoralbertos.mockery.api.Interceptor;
 import io.victoralbertos.mockery.api.Mockery;
+import io.victoralbertos.mockery.api.SkipTest;
 import io.victoralbertos.mockery.internal.TestClass.Method;
 import io.victoralbertos.mockery.internal.TestClass.Method.Param;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
@@ -76,11 +78,13 @@ final class GetTestClass {
       if (methodElement.getKind() != ElementKind.METHOD) continue;
       Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) methodElement;
 
+      if (skipTest(methodSymbol)) continue;
+
       String name = methodSymbol.getSimpleName().toString();
       TypeName returnType = TypeName.get(methodSymbol.getReturnType());
       List<Param> params = getParams(methodSymbol);
 
-      Mockery mockery = annotationMockery(methodSymbol);
+      Mockery mockery = getAnnotation(methodSymbol, Mockery.class);
 
       methods.add(new Method(name, methodElement,
           returnType, params, mockery != null));
@@ -99,7 +103,7 @@ final class GetTestClass {
       TypeName type = TypeName.get(varSymbolParam.asType());
 
       boolean isOptional = true;
-      Mockery mockery = annotationMockery(varSymbolParam);
+      Mockery mockery = getAnnotation(varSymbolParam, Mockery.class);
 
       if (mockery != null) {
         Mockery.Behaviour behaviour = getBehaviourMockery(mockery);
@@ -145,19 +149,35 @@ final class GetTestClass {
     return false;
   }
 
-  private Mockery annotationMockery(Element element) {
+  private <A extends Annotation> A getAnnotation(Element element, Class<A> classAnnotation) {
     List<? extends AnnotationMirror> annotationMirrors =
         element.getAnnotationMirrors();
 
     for (AnnotationMirror annotationMirror : annotationMirrors) {
-      Mockery mockery = annotationMirror
+      A annotation = annotationMirror
           .getAnnotationType()
           .asElement()
-          .getAnnotation(Mockery.class);
-      if (mockery != null) return mockery;
+          .getAnnotation(classAnnotation);
+      if (annotation != null) return annotation;
     }
 
     return null;
+  }
+
+  private boolean skipTest(Element element) {
+    List<? extends AnnotationMirror> annotationMirrors =
+        element.getAnnotationMirrors();
+
+    for (AnnotationMirror annotationMirror : annotationMirrors) {
+      boolean skip = annotationMirror.getAnnotationType()
+          .asElement()
+          .toString()
+          .equals(SkipTest.class.getCanonicalName());
+
+      if (skip) return true;
+    }
+
+    return false;
   }
 
   static class ValidationException extends Exception {
@@ -171,7 +191,5 @@ final class GetTestClass {
     public Element getElement() {
       return element;
     }
-
   }
-
 }
