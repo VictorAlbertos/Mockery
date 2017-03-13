@@ -1,3 +1,8 @@
+Version 1.0.2 *(2017-14-03)*
+----------------------------
+
+Remove potential '? extends' chars from string comparision on type check validation.
+
 Version 1.0.1 *(2017-11-03)*
 ----------------------------
 

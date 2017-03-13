@@ -26,7 +26,8 @@ public final class CheckSupportType {
     Type[] supportedTypes = mockery.supportedTypes();
 
     for (Type supportedType : supportedTypes) {
-      if (supportedType.toString().equals(candidate.toString())) {
+      if (supportedType.toString().replace("? extends ", "")
+          .equals(candidate.toString())) {
         return;
       }
     }
@@ -35,5 +36,4 @@ public final class CheckSupportType {
         mockery, candidate, supportedTypes);
     throw new RuntimeException(message);
   }
-
 }

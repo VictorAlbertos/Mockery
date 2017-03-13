@@ -36,7 +36,7 @@ Mockery supporting Retrofit with responses of type `Call<T>`:
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:1.0.1'
+    compile 'com.github.VictorAlbertos.Mockery:extension_retrofit:1.0.2'
 }
 ```
 
@@ -44,7 +44,7 @@ Mockery supporting Retrofit with responses of type `Single<T>`, `Single<Response
 
 ```gradle
 dependencies {
-    compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:1.0.1'
+    compile 'com.github.VictorAlbertos.Mockery:extension_rx2_retrofit:1.0.2'
 }
 ```
 
@@ -64,8 +64,8 @@ Target module *build.gradle* script:
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'com.github.VictorAlbertos.Mockery:test_compiler:1.0.1'
-  	provided 'com.github.VictorAlbertos.Mockery:test_runtime:1.0.1'
+    apt 'com.github.VictorAlbertos.Mockery:test_compiler:1.0.2'
+  	provided 'com.github.VictorAlbertos.Mockery:test_runtime:1.0.2'
   	provided 'org.glassfish:javax.annotation:10.0-b28'
   	provided 'junit:junit:4.12'
 }
