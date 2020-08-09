@@ -1,3 +1,5 @@
+⚠️ This repository is no longer mantained ⚠️
+
 [![Build Status](https://travis-ci.org/VictorAlbertos/Mockery.svg?branch=master)](https://travis-ci.org/VictorAlbertos/Mockery)
 <a href="http://www.methodscount.com/?lib=com.github.VictorAlbertos.Mockery%3Acore%3A0.0.3"><img src="https://img.shields.io/badge/Methods count-core: 194 | deps: 727-e91e63.svg"/></a>
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Mockery-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3910)
